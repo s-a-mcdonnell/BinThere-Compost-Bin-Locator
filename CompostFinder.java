@@ -23,9 +23,6 @@ public class CompostFinder extends JPanel implements MouseListener {
     private BufferedImage image;
     private BufferedImage scaledImage;
 
-    private boolean amZoomingIn;
-    private boolean amZoomingOut;
-
     private Pair mouse = null;
 
     public CompostFinder() {
@@ -72,29 +69,40 @@ public class CompostFinder extends JPanel implements MouseListener {
 
     }
 
-    //__
     public void update() {
-        if (this.mouse != null) {
-            zoom(mouse, 1.5);
-        }
-
-        this.mouse = null;
+        // TODO: Write update method
     }
 
-    public void zoom(Pair p, double scale) {
+    public void zoom(double scale) {
         //__
         scaledImage = toBufferedImage(scaledImage.getScaledInstance((int) (scaledImage.getWidth() * scale), (int) (scaledImage.getHeight() * scale), java.awt.Image.SCALE_SMOOTH))
         ;
     }
 
     public void paintComponent(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+
         g.drawImage(this.scaledImage, 0, 0, null);
 
         // TODO: Make clicking the mouse do something useful (currently, it just draws a square at the location of the click
         if (this.mouse != null) {
             g.setColor(Color.RED);
             g.fillRect((int) mouse.x - 5, (int) mouse.y - 5, 10, 10);
+
         }
+
+        // __ testing
+        if (button(g, 100, 100, HEIGHT - 100, 50, "Zoom In")) {
+            System.out.println("hello");
+            zoom(1.5);
+        } else if (button(g, 300, 100, HEIGHT - 100, 50, "Zoom Out")) {
+            System.out.println("goodbye");
+            zoom(0.66667);
+        }
+
+        this.mouse = null;
+
     }
 
     // From https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage
@@ -150,6 +158,28 @@ public class CompostFinder extends JPanel implements MouseListener {
         // Save the location at which the mouse clicks (if the click was on the display area)
         if (location.x >= 0 && location.x <= WIDTH && location.y >= 0 && location.y <= HEIGHT)
             this.mouse = new Pair(location.x, location.y);
+    }
+
+    // Takes __
+    // Returns true of the click was inside the box, otherwise returns false
+    public boolean button(Graphics g, int x, int dx, int y, int dy, String words) {
+        //__testing
+
+        g.setColor(Color.BLACK);
+        g.fillRect(x, y, dx, dy);
+
+        g.setColor(Color.RED);
+        g.drawString(words, (int) (x + 0.2 * dx), (int) (y + 0.5 * dy));
+
+        if (this.mouse != null && (mouse.x >= x && mouse.x <= x + dx && mouse.y >= y && mouse.y <= y + dy)) {
+            return true;
+        } else {
+            return false;
+        }
+
+        //__
+
+
     }
 
     @Override

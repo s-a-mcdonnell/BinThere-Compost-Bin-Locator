@@ -28,6 +28,7 @@ public class CompostFinder extends JPanel implements MouseListener {
     private BufferedImage scaledImage;
 
     private Pair mouse = null;
+    private Pair mouseToDrag = null;
     private Pair topLeftCorner = new Pair(0, 0);
 
     // 2 = zoom in, 1 = don't zoom (pan), 0.5 = zoom out, 0 = do nothing
@@ -156,11 +157,13 @@ public class CompostFinder extends JPanel implements MouseListener {
             } else if (zoomMode == 0.5) {
                 topLeftCorner.x += 0.5 * (mouse.x - topLeftCorner.x);
                 topLeftCorner.y += 0.5 * (mouse.y - topLeftCorner.y);
-            } else if (zoomMode == 1) {
+            }
+            // __ commented out to test other method of pan
+            /*else if (zoomMode == 1) {
                 // Shift to pan
                 topLeftCorner.x += CENTERX - mouse.x;
                 topLeftCorner.y += CENTERY - mouse.y;
-            }
+            }*/
 
             this.mouse = null;
         }
@@ -255,9 +258,25 @@ public class CompostFinder extends JPanel implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent click) {
+        // For use when panning
+        if (zoomMode == 1 && this.mouseToDrag != null) {
+            System.out.println("Released mouse x: " + click.getPoint().x + ", y: " + click.getPoint().y);
+            Pair clickLoc = new Pair();
+            clickLoc.matchPoint(click.getPoint());
+            this.topLeftCorner.x += clickLoc.x - this.mouseToDrag.x;
+            this.topLeftCorner.y += clickLoc.y - this.mouseToDrag.y;
+            this.mouseToDrag = null;
+        }
+
     }
 
     @Override
     public void mousePressed(MouseEvent click) {
+        // For use when panning
+        if (zoomMode == 1) {
+            System.out.println("Held mouse x: " + click.getPoint().x + ", y: " + click.getPoint().y);
+            this.mouseToDrag = new Pair();
+            mouseToDrag.matchPoint(click.getPoint());
+        }
     }
 }

@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c525edf9-aabb-43f9-aa21-d0a87e7020c4" name="Changes" comment="CSV file reader with the help of ChatGPT :)">
+    <list default="true" id="c525edf9-aabb-43f9-aa21-d0a87e7020c4" name="Changes" comment="updated user input">
       <change beforePath="$PROJECT_DIR$/CompostFinder.java" beforeDir="false" afterPath="$PROJECT_DIR$/CompostFinder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compostfinder/CompostFinder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compostfinder/CompostFinder.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +33,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2Yxo9ca22cPZNjMro9xrK2ag5MY" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -42,35 +46,20 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showModules" value="false" />
     <option name="sortByType" value="true" />
+    <option name="sortKey" value="BY_TYPE" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/skyle/IdeaProjects/COSC-111 Lab07&quot;
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.CompostFinder">
+  <component name="RunManager">
     <configuration default="true" type="TestNG">
       <option name="TEST_OBJECT" value="CLASS" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <properties />
       <listeners />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CompostFinder" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="CompostFinder" />
-      <module name="compostfinder" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="GameOfLife" type="Application" factoryName="Application" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="GameOfLife" />
-      <module name="compostfinder" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -88,11 +77,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.CompostFinder" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -127,11 +111,29 @@
       <option name="project" value="LOCAL" />
       <updated>1701478869092</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="testing commit">
+      <option name="closed" value="true" />
+      <created>1701479503884</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1701479503884</updated>
+    </task>
+    <task id="LOCAL-00005" summary="updated user input">
+      <option name="closed" value="true" />
+      <created>1701479925307</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1701479925307</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="CSV file reader with the help of ChatGPT :)" />
-    <option name="LAST_COMMIT_MESSAGE" value="CSV file reader with the help of ChatGPT :)" />
+    <MESSAGE value="testing commit" />
+    <MESSAGE value="updated user input" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated user input" />
   </component>
 </project>

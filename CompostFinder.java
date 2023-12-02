@@ -63,7 +63,6 @@ public class CompostFinder extends JPanel implements MouseListener {
             this.binIconBold = toBufferedImage(binImageBold.getScaledInstance(20, (int) (20.0 / (binImageBold.getWidth() / binImageBold.getHeight())), java.awt.Image.SCALE_SMOOTH));
 
             BufferedImage mamImage = ImageIO.read(new File("mammoth.png"));
-            //__
             this.mammoth = toBufferedImage(mamImage.getScaledInstance(20, (int) (20.0 / (mamImage.getWidth() / mamImage.getHeight())), java.awt.Image.SCALE_SMOOTH));
 
             BufferedImage image = ImageIO.read(new File("ACHigherQ.png"));
@@ -200,7 +199,6 @@ public class CompostFinder extends JPanel implements MouseListener {
                 g.setColor(Color.RED);
                 g.setStroke(new BasicStroke(3));
                 g.drawLine((int) (topLeftCorner.x + scale * p.x + 0.5 * binIcon.getWidth()), (int) (topLeftCorner.y + scale * p.y + 0.5 * binIcon.getHeight()), (int) (topLeftCorner.x + scale * usercreated.get(0).x + 0.125 * mammoth.getWidth()), (int) (topLeftCorner.y + scale * usercreated.get(0).y + 0.125 * mammoth.getHeight()));
-                //__
             }
 
             // Draw bin
@@ -216,7 +214,7 @@ public class CompostFinder extends JPanel implements MouseListener {
         g.setColor(Color.RED);
         for (Pair p : usercreated) {
             g.drawImage(mammoth, (int) (topLeftCorner.x + scale * p.x - 0.5 * mammoth.getWidth()), (int) (topLeftCorner.y + scale * p.y - 0.5 * mammoth.getWidth()), null);
-            // __g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
+            // g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
             // For testing:
             // System.out.println("Drawing point " + p.x + ", " + p.y);
         }
@@ -226,7 +224,7 @@ public class CompostFinder extends JPanel implements MouseListener {
         if (allButtons(g)) {
             // All action is handled from within allButtons
         } else if (checkCanClicker(g)) {
-            //__
+            // All action is handled from within checkCanClicker
         } else if (this.mouse != null && (mouse.x >= 0 && mouse.x <= WIDTH && mouse.y >= 0 && mouse.y <= HEIGHT)) {
             if (zoomMode == 2 && scale < 4) {
                 topLeftCorner.x -= mouse.x - topLeftCorner.x;
@@ -286,7 +284,6 @@ public class CompostFinder extends JPanel implements MouseListener {
             zoomMode = 0;
             dropPoint = true;
 
-            //__
             if (usercreated.size() != 0) {
                 // Remove all points from screen
                 while (usercreated.size() > 0) usercreated.remove(usercreated.size() - 1);
@@ -303,9 +300,10 @@ public class CompostFinder extends JPanel implements MouseListener {
             zoomMode = 0;
             dropPoint = false;
 
-            //__
+            // Placeholder values
             double dist = 9999999;
             int binIndex = -1;
+            // Find closest bin
             for (Pair user : usercreated) {
                 for (int i = 0; i < pointsToTrack.size(); i++) {
                     if (pointsToTrack.get(i).distanceTo(user) < dist) {
@@ -331,9 +329,10 @@ public class CompostFinder extends JPanel implements MouseListener {
             if (this.mouse != null && inside(this.mouse, topLeftCorner.x + scale * p.x, binIcon.getWidth(), topLeftCorner.y + scale * p.y, binIcon.getHeight())) {
                 this.mouse = null;
                 p.showDescription = !p.showDescription;
+                return true;
             }
         }
-        //__ placeholder
+
         return false;
     }
 

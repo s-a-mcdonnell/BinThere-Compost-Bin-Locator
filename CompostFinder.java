@@ -65,8 +65,8 @@ public class CompostFinder extends JPanel implements MouseListener {
 
     public void Go() {
         while (true) {
+            // Update and paint
             repaint();
-            if (this.mouse != null) update();
 
             try {
                 Thread.sleep(1000 / FPS);
@@ -93,10 +93,6 @@ public class CompostFinder extends JPanel implements MouseListener {
         scan.close();
     }
 
-    public void update() {
-        zoom();
-    }
-
     // Overloaded zoom
     public void zoom() {
         zoom(zoomMode);
@@ -105,7 +101,7 @@ public class CompostFinder extends JPanel implements MouseListener {
 
     // TODO: Refactor to take no parameters and just directly access zoomMode
     public void zoom(double scale) {
-        // __ testing
+        // For testing:
         System.out.println("zoom " + scale);
         System.out.println("mouse x: " + mouse.x + ", mouse y: " + mouse.y);
 
@@ -120,23 +116,18 @@ public class CompostFinder extends JPanel implements MouseListener {
         scaledImage = toBufferedImage(scaledImage.getScaledInstance((int) (scaledImage.getWidth() * scale), (int) (scaledImage.getHeight() * scale), java.awt.Image.SCALE_SMOOTH))
         ;
 
-        // __ adding this made all calls to zoom be with zoomMode 1.0
         this.mouse = null;
     }
 
+    // Updates and paints
     public void paintComponent(Graphics g) {
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         g.drawImage(this.scaledImage, (int) topLeftCorner.x, (int) topLeftCorner.y, null);
 
-        // TODO: Make clicking the mouse do something useful (currently, it just draws a square at the location of the click
-        if (this.mouse != null) {
-            g.setColor(Color.RED);
-            g.fillRect((int) mouse.x - 5, (int) mouse.y - 5, 10, 10);
-        }
 
-        // __ testing
+        // Printing for testing
         if (button(g, 100, 100, HEIGHT - 60, 50, "Zoom In")) {
             System.out.println("zoom in");
             mouse = null;
@@ -154,16 +145,12 @@ public class CompostFinder extends JPanel implements MouseListener {
             if (zoomMode == 2) {
                 topLeftCorner.x -= mouse.x - topLeftCorner.x;
                 topLeftCorner.y -= mouse.y - topLeftCorner.y;
+                zoom();
             } else if (zoomMode == 0.5) {
                 topLeftCorner.x += 0.5 * (mouse.x - topLeftCorner.x);
                 topLeftCorner.y += 0.5 * (mouse.y - topLeftCorner.y);
-            }
-            // __ commented out to test other method of pan
-            /*else if (zoomMode == 1) {
-                // Shift to pan
-                topLeftCorner.x += CENTERX - mouse.x;
-                topLeftCorner.y += CENTERY - mouse.y;
-            }*/
+                zoom();
+            } // panning is handled with mousePressed and mouseReleased
 
             this.mouse = null;
         }
@@ -225,7 +212,7 @@ public class CompostFinder extends JPanel implements MouseListener {
             this.mouse = new Pair(location.x, location.y);
     }
 
-    // Takes __
+    // Takes a Graphics element, the dimensions of a button to draw, and the words to draw inside that button
     // Returns true of the click was inside the box, otherwise returns false
     public boolean button(Graphics g, int x, int dx, int y, int dy, String words) {
         g.setColor(Color.BLACK);
@@ -235,15 +222,14 @@ public class CompostFinder extends JPanel implements MouseListener {
         g.drawString(words, (int) (x + 0.2 * dx), (int) (y + 0.5 * dy));
 
         if (this.mouse != null && (mouse.x >= x && mouse.x <= x + dx && mouse.y >= y && mouse.y <= y + dy)) {
+            // Reset mouse
             this.mouse = null;
-            //__ testing
+            // For testing:
             System.out.println("Button " + words + " pressed");
             return true;
         } else {
             return false;
         }
-
-        //__
 
 
     }

@@ -167,8 +167,8 @@ public class CompostFinder extends JPanel implements MouseListener {
 
     public void zoom(double s) {
         // For testing:
-        System.out.println("zoom " + s);
-        System.out.println("mouse x: " + mouse.x + ", mouse y: " + mouse.y);
+        //System.out.println("zoom " + s);
+        //System.out.println("mouse x: " + mouse.x + ", mouse y: " + mouse.y);
 
         if (zoomMode == 0) return;
 
@@ -250,13 +250,13 @@ public class CompostFinder extends JPanel implements MouseListener {
     // else returns false
     public boolean allButtons(Graphics g) {
         if (button(g, 30, 100, HEIGHT - 60, 50, "Zoom In")) {
-            System.out.println("zoom in");
+            //System.out.println("zoom in");
             mouse = null;
             zoomMode = 2;
             dropPoint = false;
             return true;
         } else if (button(g, 150, 100, HEIGHT - 60, 50, "Zoom Out")) {
-            System.out.println("zoom out");
+            //System.out.println("zoom out");
             mouse = null;
             zoomMode = 0.5;
             dropPoint = false;
@@ -409,7 +409,7 @@ public class CompostFinder extends JPanel implements MouseListener {
             // Reset mouse
             this.mouse = null;
             // For testing:
-            System.out.println("Button " + words + " pressed");
+            //System.out.println("Button " + words + " pressed");
             return true;
         } else {
             return false;
@@ -441,7 +441,7 @@ public class CompostFinder extends JPanel implements MouseListener {
     public void mouseReleased(MouseEvent click) {
         // For use when panning
         if (zoomMode == 1 && this.mouseToDrag != null) {
-            System.out.println("Released mouse x: " + click.getPoint().x + ", y: " + click.getPoint().y);
+            //System.out.println("Released mouse x: " + click.getPoint().x + ", y: " + click.getPoint().y);
             Pair clickLoc = new Pair();
             clickLoc.matchPoint(click.getPoint());
             this.topLeftCorner.x += clickLoc.x - this.mouseToDrag.x;
@@ -455,7 +455,7 @@ public class CompostFinder extends JPanel implements MouseListener {
     public void mousePressed(MouseEvent click) {
         // For use when panning
         if (zoomMode == 1) {
-            System.out.println("Held mouse x: " + click.getPoint().x + ", y: " + click.getPoint().y);
+            //System.out.println("Held mouse x: " + click.getPoint().x + ", y: " + click.getPoint().y);
             this.mouseToDrag = new Pair();
             mouseToDrag.matchPoint(click.getPoint());
         }

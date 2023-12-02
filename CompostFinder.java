@@ -68,8 +68,14 @@ public class CompostFinder extends JPanel implements MouseListener {
         frame.setVisible(true);
         world.Go();
         Scanner scan = new Scanner(System.in);
-        longitude = scan.nextInt();
-        latitude = scan.nextInt();
+        try {
+            longitude = scan.nextInt();
+            latitude = scan.nextInt();
+        }
+        catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter numbers");
+        }
+        scan.close();
     }
 
     public void paintComponent(Graphics g) {

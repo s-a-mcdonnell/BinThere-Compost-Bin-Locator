@@ -19,7 +19,8 @@ public class CompostFinder extends JPanel implements MouseListener {
     public static final double CENTERX = WIDTH / 2.0;
     public static final double CENTERY = HEIGHT / 2.0;
 
-    BufferedImage image;
+    private BufferedImage image;
+    private BufferedImage scaledImage;
 
     private Pair mouse = null;
 
@@ -34,7 +35,7 @@ public class CompostFinder extends JPanel implements MouseListener {
             int w = this.image.getWidth();
             int h = this.image.getHeight();
             double proportion = ((double) w) / (double) h;
-            this.image = toBufferedImage(image.getScaledInstance(WIDTH, (int) (WIDTH / proportion), java.awt.Image.SCALE_SMOOTH))
+            this.scaledImage = toBufferedImage(image.getScaledInstance(WIDTH, (int) (WIDTH / proportion), java.awt.Image.SCALE_SMOOTH))
             ;
 
         } catch (Exception e) {
@@ -67,7 +68,7 @@ public class CompostFinder extends JPanel implements MouseListener {
     }
 
     public void paintComponent(Graphics g) {
-        g.drawImage(this.image, 0, 0, null);
+        g.drawImage(this.scaledImage, 0, 0, null);
 
         // TODO: Make clicking the mouse do something useful (currently, it just draws a square at the location of the click
         if (this.mouse != null) {

@@ -11,23 +11,23 @@ public class CompostFinder extends JPanel {
     public static final double CENTERX = WIDTH / 2.0;
     public static final double CENTERY = HEIGHT / 2.0;
 
-    BufferedImage image;
+    private BufferedImage image;
+
+    private BufferedImage scaledImage;
 
     public CompostFinder() {
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         try {
             this.image = ImageIO.read(new File("ACHigherQ.png"));
-
-            //TODO: add a silly little coment
-            int w = this.image.getWidth();
-            int h = this.image.getHeight();
-            double proportion = ((double) w) / (double) h;
-            this.image = toBufferedImage(image.getScaledInstance((int) (HEIGHT * proportion), HEIGHT, java.awt.Image.SCALE_SMOOTH));
-
         } catch (Exception e) {
-            System.err.println("Error");
         }
+
+        //TODO: add a silly little comment
+        int w = this.image.getWidth();
+        int h = this.image.getHeight();
+        double proportion = ((double) w) / (double) h;
+        this.scaledImage = toBufferedImage(image.getScaledInstance((int) (HEIGHT * proportion), HEIGHT, java.awt.Image.SCALE_SMOOTH));
 
     }
 
@@ -55,7 +55,7 @@ public class CompostFinder extends JPanel {
 
     public void paintComponent(Graphics g) {
         //TODO: Scale
-        g.drawImage(this.image, 0, 0, null);
+        g.drawImage(this.scaledImage, 0, 0, null);
     }
 
     // From https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage

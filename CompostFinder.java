@@ -179,7 +179,9 @@ public class CompostFinder extends JPanel implements MouseListener {
     }
 
     // Updates and paints
-    public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics graf) {
+        Graphics2D g = (Graphics2D) graf;
+
         // Background
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, WIDTH, HEIGHT);
@@ -193,15 +195,16 @@ public class CompostFinder extends JPanel implements MouseListener {
             // This just transposes
             // g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
 
+            // Draw line from user to closest bin if requested
             if (p.bold) {
                 g.setColor(Color.RED);
-                g.drawLine((int) (p.x + 0.5 * binIcon.getWidth()), (int) (p.y + 0.5 * binIcon.getHeight()), (int) (usercreated.get(0).x + 0.125 * mammoth.getWidth()), (int) (usercreated.get(0).y + 0.125 * mammoth.getHeight()));
+                g.setStroke(new BasicStroke(3));
+                g.drawLine((int) (topLeftCorner.x + scale * p.x + 0.5 * binIcon.getWidth()), (int) (topLeftCorner.y + scale * p.y + 0.5 * binIcon.getHeight()), (int) (topLeftCorner.x + scale * usercreated.get(0).x + 0.125 * mammoth.getWidth()), (int) (topLeftCorner.y + scale * usercreated.get(0).y + 0.125 * mammoth.getHeight()));
                 //__
             }
 
+            // Draw bin
             g.drawImage(p.bold ? binIconBold : binIcon, (int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), null);
-            // Draw line from user to closest bin if requested
-
 
             g.setColor(Color.WHITE);
             // Show description if requested

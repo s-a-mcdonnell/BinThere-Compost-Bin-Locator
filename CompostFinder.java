@@ -59,6 +59,7 @@ public class CompostFinder extends JPanel implements MouseListener {
         frame.pack();
         frame.setVisible(true);
         world.Go();
+
     }
 
     public void paintComponent(Graphics g) {

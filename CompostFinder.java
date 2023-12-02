@@ -35,20 +35,6 @@ public class CompostFinder extends JPanel implements MouseListener {
     // 2 = zoom in, 1 = don't zoom (pan), 0.5 = zoom out, 0 = do nothing
     private double zoomMode = 0;
 
-    private void setScaledImages() {
-        // length depends on scales to be scored
-        // images are stored at the index of their scale (ex. scaledImages[1] is the standard size, scaledImages[4] is four times as large, etc)
-        scaledImages = new BufferedImage[5];
-
-        // Preload with zoom factors 1, 2, and 4
-        int s = 1;
-        for (int i = 0; s <= 4; s = (int) Math.pow(2, i)) {
-            scaledImages[s] = toBufferedImage(baseImage.getScaledInstance((baseImage.getWidth() * s), (baseImage.getHeight() * s), java.awt.Image.SCALE_SMOOTH));
-            i++;
-        }
-
-    }
-
     public CompostFinder() {
         // Setup
         addMouseListener(this);
@@ -78,6 +64,20 @@ public class CompostFinder extends JPanel implements MouseListener {
         mouse = null;
         topLeftCorner.x = 0;
         topLeftCorner.y = 0;
+    }
+
+    private void setScaledImages() {
+        // length depends on scales to be scored
+        // images are stored at the index of their scale (ex. scaledImages[1] is the standard size, scaledImages[4] is four times as large, etc)
+        scaledImages = new BufferedImage[5];
+
+        // Preload with zoom factors 1, 2, and 4
+        int s = 1;
+        for (int i = 0; s <= 4; s = (int) Math.pow(2, i)) {
+            scaledImages[s] = toBufferedImage(baseImage.getScaledInstance((baseImage.getWidth() * s), (baseImage.getHeight() * s), java.awt.Image.SCALE_SMOOTH));
+            i++;
+        }
+
     }
 
     public void Go() {
@@ -115,8 +115,6 @@ public class CompostFinder extends JPanel implements MouseListener {
         zoom(zoomMode);
     }
 
-
-    // TODO: Refactor to take no parameters and just directly access zoomMode
     public void zoom(double s) {
         // For testing:
         System.out.println("zoom " + s);
@@ -125,15 +123,6 @@ public class CompostFinder extends JPanel implements MouseListener {
         if (zoomMode == 0) return;
 
         if (this.scale * zoomMode <= 4) this.scale *= zoomMode;
-
-        /*// Don't zoom out past min size
-        if (scale < 1 && (scaledImage.getWidth() <= baseImage.getWidth() || scaledImage.getHeight() <= baseImage.getHeight())) {
-            zoomMode = 1;
-            return;
-        }
-
-        scaledImage = toBufferedImage(scaledImage.getScaledInstance((int) (scaledImage.getWidth() * scale), (int) (scaledImage.getHeight() * scale), java.awt.Image.SCALE_SMOOTH))
-        ;*/
 
         this.mouse = null;
     }
@@ -144,7 +133,6 @@ public class CompostFinder extends JPanel implements MouseListener {
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         g.drawImage(scaledImages[scale], (int) topLeftCorner.x, (int) topLeftCorner.y, null);
-
 
         // Printing for testing
         if (button(g, 100, 100, HEIGHT - 60, 50, "Zoom In")) {

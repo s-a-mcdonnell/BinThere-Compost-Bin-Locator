@@ -17,7 +17,7 @@ public class CompostFinder extends JPanel {
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         try {
-            this.image = ImageIO.read(new File("C:\\Users\\skyle\\Downloads\\ACHigherQ.png"));
+            this.image = ImageIO.read(new File("ACHigherQ.png"));
         } catch (Exception e) {
             System.err.println("Error");
         }

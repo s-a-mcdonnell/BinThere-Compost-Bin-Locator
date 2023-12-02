@@ -17,13 +17,19 @@ public class CompostFinder extends JPanel implements MouseListener {
     public static final int WIDTH = 1024;
     public static final int HEIGHT = 768;
     public static final int FPS = 60;
-    public static final double CENTERX = WIDTH / 2.0;
-    public static final double CENTERY = HEIGHT / 2.0;
+    public static final int CENTERX = WIDTH / 2;
+    public static final int CENTERY = HEIGHT / 2;
 
-    private BufferedImage image;
+    private BufferedImage baseImage;
     private BufferedImage scaledImage;
 
-    private Pair mouse = null;
+    private Pair mouse;
+    //__ private Pair anchor = new Pair(CENTERX, CENTERY - 50);
+    private Pair anchor = null;
+    private Pair topLeftCorner = new Pair(0, 0);
+
+    // 2 = zoom in, 1 = don't zoom, 0.5 = zoom out
+    private double zoomMode = 1;
 
     public CompostFinder() {
         // Setup
@@ -31,25 +37,37 @@ public class CompostFinder extends JPanel implements MouseListener {
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         try {
-            this.image = ImageIO.read(new File("ACHigherQ.png"));
+            BufferedImage image = ImageIO.read(new File("ACHigherQ.png"));
 
-            int w = this.image.getWidth();
-            int h = this.image.getHeight();
+            int w = image.getWidth();
+            int h = image.getHeight();
             double proportion = ((double) w) / (double) h;
-            this.scaledImage = toBufferedImage(image.getScaledInstance(WIDTH, (int) (WIDTH / proportion), java.awt.Image.SCALE_SMOOTH))
+            this.baseImage = toBufferedImage(image.getScaledInstance(WIDTH, (int) (WIDTH / proportion), java.awt.Image.SCALE_SMOOTH))
             ;
 
+            defaultSettings();
         } catch (Exception e) {
             System.err.println("Error");
         }
 
     }
 
+    private void defaultSettings() {
+        scaledImage = toBufferedImage(baseImage);
+        zoomMode = 1;
+        mouse = null;
+        /*anchor.x = CENTERX;
+        anchor.y = CENTERY - 50;*/
+        anchor = null;
+        topLeftCorner.x = 0;
+        topLeftCorner.y = 0;
+    }
+
     public void Go() {
         while (true) {
-            //TODO: Write update methods for whatever needs to be updated
             update();
             repaint();
+
             try {
                 Thread.sleep(1000 / FPS);
             } catch (InterruptedException e) {
@@ -71,10 +89,33 @@ public class CompostFinder extends JPanel implements MouseListener {
 
     public void update() {
         // TODO: Write update method
+
+        if (this.mouse != null) {
+            //__
+            this.anchor = this.mouse;
+
+            if (zoomMode == 2) {
+                topLeftCorner.x -= anchor.x - topLeftCorner.x;
+                topLeftCorner.y -= anchor.y - topLeftCorner.y;
+            } else if (zoomMode == 0.5) {
+                topLeftCorner.x += 0.5 * (anchor.x - topLeftCorner.x);
+                topLeftCorner.y += 0.5 * (anchor.y - topLeftCorner.y);
+            } else {
+                //__
+            }
+
+            zoom(zoomMode);
+        }
     }
 
+    // TODO: Refactor to take no parameters and just directly access zoomMode
     public void zoom(double scale) {
-        //__
+        // Don't zoom out past min size
+        if (scale < 1 && (scaledImage.getWidth() <= baseImage.getWidth() || scaledImage.getHeight() <= baseImage.getHeight())) {
+            zoomMode = 1;
+            return;
+        }
+
         scaledImage = toBufferedImage(scaledImage.getScaledInstance((int) (scaledImage.getWidth() * scale), (int) (scaledImage.getHeight() * scale), java.awt.Image.SCALE_SMOOTH))
         ;
     }
@@ -83,7 +124,9 @@ public class CompostFinder extends JPanel implements MouseListener {
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        g.drawImage(this.scaledImage, 0, 0, null);
+        //__g.drawImage(this.scaledImage, (int) anchor.x - this.scaledImage.getWidth() / 2, (int) anchor.y - this.scaledImage.getHeight() / 2, null);
+        // __g.drawImage(this.scaledImage, CENTERX - (int) (zoomMode * anchor.x), CENTERY - (int) (zoomMode * anchor.y), null);
+        g.drawImage(this.scaledImage, (int) topLeftCorner.x, (int) topLeftCorner.y, null);
 
         // TODO: Make clicking the mouse do something useful (currently, it just draws a square at the location of the click
         if (this.mouse != null) {
@@ -93,12 +136,16 @@ public class CompostFinder extends JPanel implements MouseListener {
         }
 
         // __ testing
-        if (button(g, 100, 100, HEIGHT - 100, 50, "Zoom In")) {
-            System.out.println("hello");
-            zoom(1.5);
-        } else if (button(g, 300, 100, HEIGHT - 100, 50, "Zoom Out")) {
-            System.out.println("goodbye");
-            zoom(0.66667);
+        if (button(g, 100, 100, HEIGHT - 60, 50, "Zoom In")) {
+            System.out.println("zoom in");
+            zoomMode = 2;
+        } else if (button(g, 300, 100, HEIGHT - 60, 50, "Zoom Out")) {
+            System.out.println("zoom out");
+            zoomMode = 0.5;
+        } else if (button(g, 500, 100, HEIGHT - 60, 50, "Pan")) {
+            zoomMode = 1;
+        } else if (button(g, 700, 100, HEIGHT - 60, 50, "Reset")) {
+            defaultSettings();
         }
 
         this.mouse = null;
@@ -163,8 +210,6 @@ public class CompostFinder extends JPanel implements MouseListener {
     // Takes __
     // Returns true of the click was inside the box, otherwise returns false
     public boolean button(Graphics g, int x, int dx, int y, int dy, String words) {
-        //__testing
-
         g.setColor(Color.BLACK);
         g.fillRect(x, y, dx, dy);
 
@@ -172,6 +217,9 @@ public class CompostFinder extends JPanel implements MouseListener {
         g.drawString(words, (int) (x + 0.2 * dx), (int) (y + 0.5 * dy));
 
         if (this.mouse != null && (mouse.x >= x && mouse.x <= x + dx && mouse.y >= y && mouse.y <= y + dy)) {
+            this.mouse = null;
+            //__ testing
+            System.out.println("Button " + words + " pressed");
             return true;
         } else {
             return false;

@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 
 public class CompostFinder extends JPanel implements MouseListener {
@@ -64,6 +65,7 @@ public class CompostFinder extends JPanel implements MouseListener {
         frame.pack();
         frame.setVisible(true);
         world.Go();
+        Scanner scan = new Scanner(System.in);
 
     }
 

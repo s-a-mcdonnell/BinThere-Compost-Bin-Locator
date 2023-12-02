@@ -35,7 +35,10 @@ public class CompostFinder extends JPanel implements MouseListener {
     private Pair topLeftCorner = new Pair(0, 0);
 
     // TODO: set this to useful values
-    private ArrayList<Pair> pointsToTrack = new ArrayList<Pair>();
+    private ArrayList<PairWithText> pointsToTrack = new ArrayList<PairWithText>();
+
+    private ArrayList<Pair> usercreated = new ArrayList<Pair>();
+    private boolean dropPoint = false;
 
     // 2 = zoom in, 1 = don't zoom (pan), 0.5 = zoom out, 0 = do nothing
     private double zoomMode = 0;
@@ -67,9 +70,9 @@ public class CompostFinder extends JPanel implements MouseListener {
 
         // TODO: Change from test values to useful values (compost bin locations)
         // this one is approx over Val
-        pointsToTrack.add(new Pair(580, 280));
+        pointsToTrack.add(new PairWithText(580, 280));
         // this one is approx over Frost
-        pointsToTrack.add(new Pair(520, 335));
+        pointsToTrack.add(new PairWithText(520, 335));
 
     }
 
@@ -79,6 +82,8 @@ public class CompostFinder extends JPanel implements MouseListener {
         mouse = null;
         topLeftCorner.x = 0;
         topLeftCorner.y = 0;
+        dropPoint = false;
+        usercreated = new ArrayList<Pair>();
     }
 
     private void setScaledImages() {
@@ -150,9 +155,8 @@ public class CompostFinder extends JPanel implements MouseListener {
 
         g.drawImage(scaledImages[scale], (int) topLeftCorner.x, (int) topLeftCorner.y, null);
 
-        g.setColor(Color.RED);
         // TODO: Make points look as desired (currently 15 by 15 red squares)
-        for (Pair p : pointsToTrack) {
+        for (PairWithText p : pointsToTrack) {
             // This scales the box alone with the drawing
             // g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15 * scale, 15 * scale);
 
@@ -162,20 +166,18 @@ public class CompostFinder extends JPanel implements MouseListener {
             g.drawImage(binIcon, (int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), null);
 
         }
+
+        g.setColor(Color.RED);
+        for (Pair p : usercreated) {
+            g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
+            // For testing:
+            // System.out.println("Drawing point " + p.x + ", " + p.y);
+        }
+
+
         // Printing for testing
-        if (button(g, 100, 100, HEIGHT - 60, 50, "Zoom In")) {
-            System.out.println("zoom in");
-            mouse = null;
-            zoomMode = 2;
-        } else if (button(g, 300, 100, HEIGHT - 60, 50, "Zoom Out")) {
-            System.out.println("zoom out");
-            mouse = null;
-            zoomMode = 0.5;
-        } else if (button(g, 500, 100, HEIGHT - 60, 50, "Pan")) {
-            mouse = null;
-            zoomMode = 1;
-        } else if (button(g, 700, 100, HEIGHT - 60, 50, "Reset")) {
-            defaultSettings();
+        if (allButtons(g)) {
+            // All action is handled from within allButtons
         } else if (this.mouse != null && (mouse.x >= 0 && mouse.x <= WIDTH && mouse.y >= 0 && mouse.y <= HEIGHT)) {
             if (zoomMode == 2 && scale < 4) {
                 topLeftCorner.x -= mouse.x - topLeftCorner.x;
@@ -185,11 +187,52 @@ public class CompostFinder extends JPanel implements MouseListener {
                 topLeftCorner.x += 0.5 * (mouse.x - topLeftCorner.x);
                 topLeftCorner.y += 0.5 * (mouse.y - topLeftCorner.y);
                 zoom();
+            } else if (zoomMode == 0 && dropPoint) {
+                usercreated.add(new Pair((mouse.x - topLeftCorner.x) / scale, (mouse.y - topLeftCorner.y) / scale));
+                // For testing:
+                // System.out.println("Adding point " + usercreated.get(usercreated.size() - 1).x + ", " + usercreated.get(usercreated.size() - 1).y);
+
+
             } // panning is handled with mousePressed and mouseReleased
 
             this.mouse = null;
         }
 
+    }
+
+    // Draws all buttons and sets fields accordingly
+    // Returns true if any of the buttons were pressed
+    // else returns false
+    public boolean allButtons(Graphics g) {
+        if (button(g, 100, 100, HEIGHT - 60, 50, "Zoom In")) {
+            System.out.println("zoom in");
+            mouse = null;
+            zoomMode = 2;
+            dropPoint = false;
+            return true;
+        } else if (button(g, 300, 100, HEIGHT - 60, 50, "Zoom Out")) {
+            System.out.println("zoom out");
+            mouse = null;
+            zoomMode = 0.5;
+            dropPoint = false;
+            return true;
+        } else if (button(g, 500, 100, HEIGHT - 60, 50, "Pan")) {
+            mouse = null;
+            zoomMode = 1;
+            dropPoint = false;
+            return true;
+        } else if (button(g, 700, 100, HEIGHT - 60, 50, "Reset")) {
+            defaultSettings();
+            return true;
+        } else if (button(g, 900, 100, HEIGHT - 60, 50, "Drop Point")) {
+            //__
+            mouse = null;
+            zoomMode = 0;
+            dropPoint = true;
+            return true;
+        }
+
+        return false;
     }
 
     // From https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage

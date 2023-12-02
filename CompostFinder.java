@@ -49,7 +49,7 @@ public class CompostFinder extends JPanel implements MouseListener {
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         try {
-            BufferedImage binImage = ImageIO.read(new File("CompostBinPlaceholder.png"));
+            BufferedImage binImage = ImageIO.read(new File("compostBin.png"));
             this.binIcon = toBufferedImage(binImage.getScaledInstance(20, (int) (20.0 / (binImage.getWidth() / binImage.getHeight())), java.awt.Image.SCALE_SMOOTH));
 
 
@@ -69,9 +69,9 @@ public class CompostFinder extends JPanel implements MouseListener {
             double longDiff = botLong - topLong;
             double currLat = 42.372309701612735;
             double currLong = -72.51629477142764;
-            int latLoc = (int) Math.round((currLat - topLat) / latDiff * WIDTH/proportion);
+            int latLoc = (int) Math.round((currLat - topLat) / latDiff * WIDTH / proportion);
             int longLoc = (int) Math.round((currLong - topLong) / longDiff * WIDTH);
-            pointsToTrack.add(new Pair(latLoc, longLoc));
+            pointsToTrack.add(new PairWithText(latLoc, longLoc));
 
             defaultSettings();
         } catch (Exception e) {

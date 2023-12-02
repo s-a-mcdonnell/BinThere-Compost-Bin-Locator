@@ -29,6 +29,9 @@ public class CompostFinder extends JPanel implements MouseListener {
     private int scale = 1;
 
     private BufferedImage binIcon;
+    private BufferedImage binIconBold;
+
+    private BufferedImage mammoth;
 
     private Pair mouse = null;
     private Pair mouseToDrag = null;
@@ -55,6 +58,13 @@ public class CompostFinder extends JPanel implements MouseListener {
         try {
             BufferedImage binImage = ImageIO.read(new File("compostBin.png"));
             this.binIcon = toBufferedImage(binImage.getScaledInstance(20, (int) (20.0 / (binImage.getWidth() / binImage.getHeight())), java.awt.Image.SCALE_SMOOTH));
+
+            BufferedImage binImageBold = ImageIO.read(new File("obnoxiousBin.png"));
+            this.binIconBold = toBufferedImage(binImageBold.getScaledInstance(20, (int) (20.0 / (binImageBold.getWidth() / binImageBold.getHeight())), java.awt.Image.SCALE_SMOOTH));
+
+            BufferedImage mamImage = ImageIO.read(new File("mammoth.png"));
+            //__
+            this.mammoth = toBufferedImage(mamImage.getScaledInstance(20, (int) (20.0 / (mamImage.getWidth() / mamImage.getHeight())), java.awt.Image.SCALE_SMOOTH));
 
             BufferedImage image = ImageIO.read(new File("ACHigherQ.png"));
 
@@ -183,7 +193,7 @@ public class CompostFinder extends JPanel implements MouseListener {
             // This just transposes
             // g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
 
-            g.drawImage(binIcon, (int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), null);
+            g.drawImage(p.bold ? binIconBold : binIcon, (int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), null);
             if (p.showDescription && p.description != null)
                 g.drawString(p.description, (int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y));
         }
@@ -191,7 +201,8 @@ public class CompostFinder extends JPanel implements MouseListener {
         // TODO: Make dropped points look as desired (currently 15 by 15 red squares)
         g.setColor(Color.RED);
         for (Pair p : usercreated) {
-            g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
+            g.drawImage(mammoth, (int) (topLeftCorner.x + scale * p.x - 0.5 * mammoth.getWidth()), (int) (topLeftCorner.y + scale * p.y - 0.5 * mammoth.getWidth()), null);
+            // __g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
             // For testing:
             // System.out.println("Drawing point " + p.x + ", " + p.y);
         }
@@ -246,9 +257,10 @@ public class CompostFinder extends JPanel implements MouseListener {
         } else if (button(g, 390, 100, HEIGHT - 60, 50, "Reset")) {
             defaultSettings();
             usercreated = new ArrayList<Pair>();
-            // Hide descriptions of bins
+            // Hide descriptions of bins and un-bold them
             for (PairWithText p : pointsToTrack) {
                 p.showDescription = false;
+                p.bold = false;
             }
             //reader = false;
             return true;
@@ -261,14 +273,30 @@ public class CompostFinder extends JPanel implements MouseListener {
             dropPoint = true;
             //reader = false;
             return true;
-        } /*else if (button(g, 750, 100, HEIGHT - 60, 50, "See Info")) {
-            //__
-            reader = true;
+        } else if (usercreated.size() > 0 && button(g, 750, 100, HEIGHT - 60, 50, "Find Bin")) {
             mouse = null;
             zoomMode = 0;
             dropPoint = false;
-            return true;
-        }*/
+
+            //__
+            double dist = 9999999;
+            int binIndex = -1;
+            for (Pair user : usercreated) {
+                for (int i = 0; i < pointsToTrack.size(); i++) {
+                    if (pointsToTrack.get(i).distanceTo(user) < dist) {
+                        dist = pointsToTrack.get(i).distanceTo(user);
+                        binIndex = i;
+                    }
+                }
+            }
+
+            if (binIndex == -1) {
+                System.err.println("Error: No bin found.");
+            }
+
+            pointsToTrack.get(binIndex).bold = true;
+
+        }
 
         return false;
     }

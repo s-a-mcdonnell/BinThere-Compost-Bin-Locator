@@ -58,17 +58,17 @@ public class CompostFinder extends JPanel implements MouseListener {
             double proportion = ((double) w) / (double) h;
             this.baseImage = toBufferedImage(image.getScaledInstance(WIDTH, (int) (WIDTH / proportion), java.awt.Image.SCALE_SMOOTH));
 
-            double topLat = 42.377579;
-            double topLong = -72.529270;
-            double botLat = 42.366916;
-            double botLong = -72.505895;
-            double latDiff = botLat - topLat;
+            double topLat = 42.37747909759732; //42.37747909759732, -72.5289558884478
+            double topLong = -72.5289558884478;
+            double botLat = 42.36708626458876; //42.367386655249895, -72.50576946133151
+            double botLong = -72.50576946133151;
+            double latDiff = botLat - topLat; // 42.374660288597745, -72.50579222182994
             double longDiff = botLong - topLong;
-            double currLat = 42.372309701612735;
-            double currLong = -72.51629477142764;
-            int latLoc = (int) Math.round((currLat - topLat) / latDiff * WIDTH/proportion);
-            int longLoc = (int) Math.round((currLong - topLong) / longDiff * WIDTH);
-            pointsToTrack.add(new Pair(latLoc, longLoc));
+            double currLat = 42.37020925345563; // 42.37020925345563, -72.51800758810398
+            double currLong = -72.51800758810398;
+            int downLoc = (int) Math.round((currLat - topLat) / latDiff * WIDTH / proportion);
+            int rightLoc = (int) Math.round((currLong - topLong) / longDiff * WIDTH);
+            pointsToTrack.add(new Pair(rightLoc, downLoc));
 
             defaultSettings();
         } catch (Exception e) {

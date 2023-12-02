@@ -60,8 +60,10 @@ public class CompostFinder extends JPanel implements MouseListener {
         setScaledImages();
 
         // TODO: Change from test values to useful values (compost bin locations)
-        pointsToTrack.add(new Pair(100, 100));
-        pointsToTrack.add(new Pair(200, 500));
+        // this one is approx over Val
+        pointsToTrack.add(new Pair(580, 280));
+        // this one is approx over Frost
+        pointsToTrack.add(new Pair(520, 335));
 
     }
 
@@ -143,9 +145,9 @@ public class CompostFinder extends JPanel implements MouseListener {
         g.drawImage(scaledImages[scale], (int) topLeftCorner.x, (int) topLeftCorner.y, null);
 
         g.setColor(Color.RED);
-        // TODO: Make points look as desired (currently 50 by 50 red squares)
+        // TODO: Make points look as desired (currently 15 by 15 red squares)
         for (Pair p : pointsToTrack) {
-            g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 50 * scale, 50 * scale);
+            g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15 * scale, 15 * scale);
         }
         // Printing for testing
         if (button(g, 100, 100, HEIGHT - 60, 50, "Zoom In")) {

@@ -51,6 +51,7 @@ public class CompostFinder extends JPanel {
         frame.pack();
         frame.setVisible(true);
         world.Go();
+
     }
 
     public void paintComponent(Graphics g) {

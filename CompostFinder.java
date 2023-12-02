@@ -27,7 +27,7 @@ public class CompostFinder extends JPanel {
         int w = this.image.getWidth();
         int h = this.image.getHeight();
         double proportion = ((double) w) / (double) h;
-        this.scaledImage = toBufferedImage(image.getScaledInstance((int) (HEIGHT * proportion), HEIGHT, java.awt.Image.SCALE_SMOOTH));
+        this.scaledImage = toBufferedImage(image.getScaledInstance(WIDTH, (int) (WIDTH / proportion), java.awt.Image.SCALE_SMOOTH));
 
     }
 

@@ -193,7 +193,18 @@ public class CompostFinder extends JPanel implements MouseListener {
             // This just transposes
             // g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
 
+            if (p.bold) {
+                g.setColor(Color.RED);
+                g.drawLine((int) (p.x + 0.5 * binIcon.getWidth()), (int) (p.y + 0.5 * binIcon.getHeight()), (int) (usercreated.get(0).x + 0.125 * mammoth.getWidth()), (int) (usercreated.get(0).y + 0.125 * mammoth.getHeight()));
+                //__
+            }
+
             g.drawImage(p.bold ? binIconBold : binIcon, (int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), null);
+            // Draw line from user to closest bin if requested
+
+
+            g.setColor(Color.WHITE);
+            // Show description if requested
             if (p.showDescription && p.description != null)
                 g.drawString(p.description, (int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y));
         }
@@ -222,7 +233,7 @@ public class CompostFinder extends JPanel implements MouseListener {
                 topLeftCorner.x += 0.5 * (mouse.x - topLeftCorner.x);
                 topLeftCorner.y += 0.5 * (mouse.y - topLeftCorner.y);
                 zoom();
-            } else if (zoomMode == 0 && dropPoint) {
+            } else if (zoomMode == 0 && dropPoint && usercreated.size() == 0) {
                 usercreated.add(new Pair((mouse.x - topLeftCorner.x) / scale, (mouse.y - topLeftCorner.y) / scale));
                 // For testing:
                 // System.out.println("Adding point " + usercreated.get(usercreated.size() - 1).x + ", " + usercreated.get(usercreated.size() - 1).y);
@@ -267,10 +278,21 @@ public class CompostFinder extends JPanel implements MouseListener {
         } else if (button(g, 510, 100, HEIGHT - 60, 50, "Recenter")) {
             // Resets but without erasing user-created points
             defaultSettings();
-        } else if (button(g, 630, 100, HEIGHT - 60, 50, "Drop Point")) {
+        } else if (button(g, 630, 100, HEIGHT - 60, 50, usercreated.size() == 0 ? "Drop Point" : "Remove Point")) {
             mouse = null;
             zoomMode = 0;
             dropPoint = true;
+
+            //__
+            if (usercreated.size() != 0) {
+                // Remove all points from screen
+                while (usercreated.size() > 0) usercreated.remove(usercreated.size() - 1);
+
+                for (PairWithText bin : pointsToTrack) {
+                    bin.bold = false;
+                }
+            }
+
             //reader = false;
             return true;
         } else if (usercreated.size() > 0 && button(g, 750, 100, HEIGHT - 60, 50, "Find Bin")) {

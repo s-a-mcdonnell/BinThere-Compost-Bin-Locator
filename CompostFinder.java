@@ -23,13 +23,12 @@ public class CompostFinder extends JPanel implements MouseListener {
     private BufferedImage baseImage;
     private BufferedImage scaledImage;
 
-    private Pair mouse;
-    //__ private Pair anchor = new Pair(CENTERX, CENTERY - 50);
-    private Pair anchor = null;
+    private Pair mouse = null;
+    // __ private Pair anchor = null;
     private Pair topLeftCorner = new Pair(0, 0);
 
-    // 2 = zoom in, 1 = don't zoom, 0.5 = zoom out
-    private double zoomMode = 1;
+    // 2 = zoom in, 1 = don't zoom (pan), 0.5 = zoom out, 0 = do nothing
+    private double zoomMode = 0;
 
     public CompostFinder() {
         // Setup
@@ -54,19 +53,17 @@ public class CompostFinder extends JPanel implements MouseListener {
 
     private void defaultSettings() {
         scaledImage = toBufferedImage(baseImage);
-        zoomMode = 1;
+        zoomMode = 0;
         mouse = null;
-        /*anchor.x = CENTERX;
-        anchor.y = CENTERY - 50;*/
-        anchor = null;
+        // __anchor = null;
         topLeftCorner.x = 0;
         topLeftCorner.y = 0;
     }
 
     public void Go() {
         while (true) {
-            update();
             repaint();
+            if (this.mouse != null) update();
 
             try {
                 Thread.sleep(1000 / FPS);
@@ -90,26 +87,34 @@ public class CompostFinder extends JPanel implements MouseListener {
     public void update() {
         // TODO: Write update method
 
-        if (this.mouse != null) {
+
+        /*if (zoomMode == 2 && anchor != null) {
+            topLeftCorner.x -= anchor.x - topLeftCorner.x;
+            topLeftCorner.y -= anchor.y - topLeftCorner.y;
+        } else if (zoomMode == 0.5 && anchor != null) {
+            topLeftCorner.x += 0.5 * (anchor.x - topLeftCorner.x);
+            topLeftCorner.y += 0.5 * (anchor.y - topLeftCorner.y);
+        } else {
             //__
-            this.anchor = this.mouse;
+        }*/
 
-            /*if (zoomMode == 2) {
-                topLeftCorner.x -= anchor.x - topLeftCorner.x;
-                topLeftCorner.y -= anchor.y - topLeftCorner.y;
-            } else if (zoomMode == 0.5) {
-                topLeftCorner.x += 0.5 * (anchor.x - topLeftCorner.x);
-                topLeftCorner.y += 0.5 * (anchor.y - topLeftCorner.y);
-            } else {
-                //__
-            }*/
-
-            zoom(zoomMode);
-        }
+        zoom();
     }
+
+    // Overloaded zoom
+    public void zoom() {
+        zoom(zoomMode);
+    }
+
 
     // TODO: Refactor to take no parameters and just directly access zoomMode
     public void zoom(double scale) {
+        // __ testing
+        System.out.println("zoom " + scale);
+        System.out.println("mouse x: " + mouse.x + ", mouse y: " + mouse.y);
+
+        if (zoomMode == 0) return;
+
         // Don't zoom out past min size
         if (scale < 1 && (scaledImage.getWidth() <= baseImage.getWidth() || scaledImage.getHeight() <= baseImage.getHeight())) {
             zoomMode = 1;
@@ -118,6 +123,9 @@ public class CompostFinder extends JPanel implements MouseListener {
 
         scaledImage = toBufferedImage(scaledImage.getScaledInstance((int) (scaledImage.getWidth() * scale), (int) (scaledImage.getHeight() * scale), java.awt.Image.SCALE_SMOOTH))
         ;
+
+        // __ adding this made all calls to zoom be with zoomMode 1.0
+        this.mouse = null;
     }
 
     public void paintComponent(Graphics g) {
@@ -132,30 +140,40 @@ public class CompostFinder extends JPanel implements MouseListener {
         if (this.mouse != null) {
             g.setColor(Color.RED);
             g.fillRect((int) mouse.x - 5, (int) mouse.y - 5, 10, 10);
-
         }
 
         // __ testing
         if (button(g, 100, 100, HEIGHT - 60, 50, "Zoom In")) {
             System.out.println("zoom in");
-            topLeftCorner.x -= mouse.x - topLeftCorner.x;
-            topLeftCorner.y -= mouse.y - topLeftCorner.y;
+            //__anchor = mouse;
+            mouse = null;
             zoomMode = 2;
-            this.mouse = null;
         } else if (button(g, 300, 100, HEIGHT - 60, 50, "Zoom Out")) {
-            topLeftCorner.x += 0.5 * (mouse.x - topLeftCorner.x);
-            topLeftCorner.y += 0.5 * (mouse.y - topLeftCorner.y);
             System.out.println("zoom out");
+            //__anchor = mouse;
+            mouse = null;
             zoomMode = 0.5;
-            this.mouse = null;
         } else if (button(g, 500, 100, HEIGHT - 60, 50, "Pan")) {
+            //__anchor = mouse;
+            mouse = null;
             zoomMode = 1;
-            this.mouse = null;
         } else if (button(g, 700, 100, HEIGHT - 60, 50, "Reset")) {
             defaultSettings();
-        }
+        } else if (this.mouse != null && (mouse.x >= 0 && mouse.x <= WIDTH && mouse.y >= 0 && mouse.y <= HEIGHT)) {
+            if (zoomMode == 2) {
+                topLeftCorner.x -= mouse.x - topLeftCorner.x;
+                topLeftCorner.y -= mouse.y - topLeftCorner.y;
+            } else if (zoomMode == 0.5) {
+                topLeftCorner.x += 0.5 * (mouse.x - topLeftCorner.x);
+                topLeftCorner.y += 0.5 * (mouse.y - topLeftCorner.y);
+            } else if (zoomMode == 1) {
+                // Shift to pan
+                topLeftCorner.x += CENTERX - mouse.x;
+                topLeftCorner.y += CENTERY - mouse.y;
+            }
 
-        // __ this.mouse = null;
+            this.mouse = null;
+        }
 
     }
 
@@ -224,7 +242,7 @@ public class CompostFinder extends JPanel implements MouseListener {
         g.drawString(words, (int) (x + 0.2 * dx), (int) (y + 0.5 * dy));
 
         if (this.mouse != null && (mouse.x >= x && mouse.x <= x + dx && mouse.y >= y && mouse.y <= y + dy)) {
-            //__this.mouse = null;
+            this.mouse = null;
             //__ testing
             System.out.println("Button " + words + " pressed");
             return true;

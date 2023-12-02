@@ -38,7 +38,11 @@ public class CompostFinder extends JPanel implements MouseListener {
     private ArrayList<PairWithText> pointsToTrack = new ArrayList<PairWithText>();
 
     private ArrayList<Pair> usercreated = new ArrayList<Pair>();
+    // Is true when user is dropping new points to be added to usercreated
     private boolean dropPoint = false;
+
+    // Is true when user is clicking on compost icons to see their information
+    //private boolean reader = false;
 
     // 2 = zoom in, 1 = don't zoom (pan), 0.5 = zoom out, 0 = do nothing
     private double zoomMode = 0;
@@ -84,9 +88,9 @@ public class CompostFinder extends JPanel implements MouseListener {
 
         // TODO: Change from test values to useful values (compost bin locations)
         // this one is approx over Val
-        pointsToTrack.add(new PairWithText(580, 280));
+        pointsToTrack.add(new PairWithText(580, 280, "Val"));
         // this one is approx over Frost
-        pointsToTrack.add(new PairWithText(520, 335));
+        pointsToTrack.add(new PairWithText(520, 335, "Frost"));
 
     }
 
@@ -168,7 +172,6 @@ public class CompostFinder extends JPanel implements MouseListener {
 
         g.drawImage(scaledImages[scale], (int) topLeftCorner.x, (int) topLeftCorner.y, null);
 
-        // TODO: Make points look as desired (currently 15 by 15 red squares)
         for (PairWithText p : pointsToTrack) {
             // This scales the box alone with the drawing
             // g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15 * scale, 15 * scale);
@@ -177,9 +180,11 @@ public class CompostFinder extends JPanel implements MouseListener {
             // g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
 
             g.drawImage(binIcon, (int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), null);
-
+            if (p.showDescription && p.description != null)
+                g.drawString(p.description, (int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y));
         }
 
+        // TODO: Make dropped points look as desired (currently 15 by 15 red squares)
         g.setColor(Color.RED);
         for (Pair p : usercreated) {
             g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
@@ -191,6 +196,8 @@ public class CompostFinder extends JPanel implements MouseListener {
         // Printing for testing
         if (allButtons(g)) {
             // All action is handled from within allButtons
+        } else if (checkCanClicker(g)) {
+            //__
         } else if (this.mouse != null && (mouse.x >= 0 && mouse.x <= WIDTH && mouse.y >= 0 && mouse.y <= HEIGHT)) {
             if (zoomMode == 2 && scale < 4) {
                 topLeftCorner.x -= mouse.x - topLeftCorner.x;
@@ -204,8 +211,6 @@ public class CompostFinder extends JPanel implements MouseListener {
                 usercreated.add(new Pair((mouse.x - topLeftCorner.x) / scale, (mouse.y - topLeftCorner.y) / scale));
                 // For testing:
                 // System.out.println("Adding point " + usercreated.get(usercreated.size() - 1).x + ", " + usercreated.get(usercreated.size() - 1).y);
-
-
             } // panning is handled with mousePressed and mouseReleased
 
             this.mouse = null;
@@ -237,6 +242,11 @@ public class CompostFinder extends JPanel implements MouseListener {
         } else if (button(g, 390, 100, HEIGHT - 60, 50, "Reset")) {
             defaultSettings();
             usercreated = new ArrayList<Pair>();
+            // Hide descriptions of bins
+            for (PairWithText p : pointsToTrack) {
+                p.showDescription = false;
+            }
+            //reader = false;
             return true;
         } else if (button(g, 510, 100, HEIGHT - 60, 50, "Recenter")) {
             // Resets but without erasing user-created points
@@ -245,9 +255,28 @@ public class CompostFinder extends JPanel implements MouseListener {
             mouse = null;
             zoomMode = 0;
             dropPoint = true;
+            //reader = false;
             return true;
-        }
+        } /*else if (button(g, 750, 100, HEIGHT - 60, 50, "See Info")) {
+            //__
+            reader = true;
+            mouse = null;
+            zoomMode = 0;
+            dropPoint = false;
+            return true;
+        }*/
 
+        return false;
+    }
+
+    private boolean checkCanClicker(Graphics g) {
+        for (PairWithText p : pointsToTrack) {
+            if (this.mouse != null && (this.mouse.x >= topLeftCorner.x + scale * p.x && this.mouse.x <= topLeftCorner.x + scale * p.x + binIcon.getWidth() && this.mouse.y >= topLeftCorner.y + scale * p.y && this.mouse.y <= topLeftCorner.y + scale * p.y + binIcon.getHeight())) {
+                this.mouse = null;
+                p.showDescription = !p.showDescription;
+            }
+        }
+        //__ placeholder
         return false;
     }
 
@@ -306,13 +335,18 @@ public class CompostFinder extends JPanel implements MouseListener {
             this.mouse = new Pair(location.x, location.y);
     }
 
+    // Overloaded button with default colors
+    public boolean button(Graphics g, int x, int dx, int y, int dy, String words) {
+        return button(g, x, dx, y, dy, words, Color.BLACK, Color.RED);
+    }
+
     // Takes a Graphics element, the dimensions of a button to draw, and the words to draw inside that button
     // Returns true of the click was inside the box, otherwise returns false
-    public boolean button(Graphics g, int x, int dx, int y, int dy, String words) {
-        g.setColor(Color.BLACK);
+    public boolean button(Graphics g, int x, int dx, int y, int dy, String words, Color color1, Color color2) {
+        g.setColor(color1);
         g.fillRect(x, y, dx, dy);
 
-        g.setColor(Color.RED);
+        g.setColor(color2);
         g.drawString(words, (int) (x + 0.2 * dx), (int) (y + 0.5 * dy));
 
         if (this.mouse != null && (mouse.x >= x && mouse.x <= x + dx && mouse.y >= y && mouse.y <= y + dy)) {

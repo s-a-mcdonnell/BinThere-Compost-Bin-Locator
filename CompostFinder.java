@@ -94,7 +94,7 @@ public class CompostFinder extends JPanel implements MouseListener {
             //__
             this.anchor = this.mouse;
 
-            if (zoomMode == 2) {
+            /*if (zoomMode == 2) {
                 topLeftCorner.x -= anchor.x - topLeftCorner.x;
                 topLeftCorner.y -= anchor.y - topLeftCorner.y;
             } else if (zoomMode == 0.5) {
@@ -102,7 +102,7 @@ public class CompostFinder extends JPanel implements MouseListener {
                 topLeftCorner.y += 0.5 * (anchor.y - topLeftCorner.y);
             } else {
                 //__
-            }
+            }*/
 
             zoom(zoomMode);
         }
@@ -138,17 +138,24 @@ public class CompostFinder extends JPanel implements MouseListener {
         // __ testing
         if (button(g, 100, 100, HEIGHT - 60, 50, "Zoom In")) {
             System.out.println("zoom in");
+            topLeftCorner.x -= mouse.x - topLeftCorner.x;
+            topLeftCorner.y -= mouse.y - topLeftCorner.y;
             zoomMode = 2;
+            this.mouse = null;
         } else if (button(g, 300, 100, HEIGHT - 60, 50, "Zoom Out")) {
+            topLeftCorner.x += 0.5 * (mouse.x - topLeftCorner.x);
+            topLeftCorner.y += 0.5 * (mouse.y - topLeftCorner.y);
             System.out.println("zoom out");
             zoomMode = 0.5;
+            this.mouse = null;
         } else if (button(g, 500, 100, HEIGHT - 60, 50, "Pan")) {
             zoomMode = 1;
+            this.mouse = null;
         } else if (button(g, 700, 100, HEIGHT - 60, 50, "Reset")) {
             defaultSettings();
         }
 
-        this.mouse = null;
+        // __ this.mouse = null;
 
     }
 
@@ -217,7 +224,7 @@ public class CompostFinder extends JPanel implements MouseListener {
         g.drawString(words, (int) (x + 0.2 * dx), (int) (y + 0.5 * dy));
 
         if (this.mouse != null && (mouse.x >= x && mouse.x <= x + dx && mouse.y >= y && mouse.y <= y + dy)) {
-            this.mouse = null;
+            //__this.mouse = null;
             //__ testing
             System.out.println("Button " + words + " pressed");
             return true;

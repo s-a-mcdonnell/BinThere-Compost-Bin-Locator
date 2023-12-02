@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
+import java.util.Scanner;
 
 
 public class CompostFinder extends JPanel implements MouseListener {
@@ -19,6 +19,8 @@ public class CompostFinder extends JPanel implements MouseListener {
     public static final int FPS = 60;
     public static final double CENTERX = WIDTH / 2.0;
     public static final double CENTERY = HEIGHT / 2.0;
+    public static double longitude;
+    public static double latitude;
 
     private BufferedImage image;
     private BufferedImage scaledImage;
@@ -66,7 +68,8 @@ public class CompostFinder extends JPanel implements MouseListener {
         frame.setVisible(true);
         world.Go();
         Scanner scan = new Scanner(System.in);
-
+        longitude = scan.nextInt();
+        latitude = scan.nextInt();
     }
 
     public void paintComponent(Graphics g) {

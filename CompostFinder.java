@@ -56,7 +56,6 @@ public class CompostFinder extends JPanel implements MouseListener {
             BufferedImage binImage = ImageIO.read(new File("compostBin.png"));
             this.binIcon = toBufferedImage(binImage.getScaledInstance(20, (int) (20.0 / (binImage.getWidth() / binImage.getHeight())), java.awt.Image.SCALE_SMOOTH));
 
-
             BufferedImage image = ImageIO.read(new File("ACHigherQ.png"));
 
             int w = image.getWidth();
@@ -65,18 +64,17 @@ public class CompostFinder extends JPanel implements MouseListener {
             double proportion = ((double) w) / (double) h;
             this.baseImage = toBufferedImage(image.getScaledInstance(WIDTH, (int) (WIDTH / proportion), java.awt.Image.SCALE_SMOOTH));
 
-            double topLat = 42.37747909759732; //42.37747909759732, -72.5289558884478
-            double topLong = -72.5289558884478;
-            double botLat = 42.36708626458876; //42.367386655249895, -72.50576946133151
-            double botLong = -72.50576946133151;
-            double latDiff = botLat - topLat; // 42.374660288597745, -72.50579222182994
-            double longDiff = botLong - topLong;
+//            double currLat = 42.37020925345563; // 42.37020925345563, -72.51800758810398
+//            double currLong = -72.51800758810398;
 
-            double currLat = 42.37020925345563; // 42.37020925345563, -72.51800758810398
-            double currLong = -72.51800758810398;
-            int downLoc = (int) Math.round((currLat - topLat) / latDiff * WIDTH / proportion);
-            int rightLoc = (int) Math.round((currLong - topLong) / longDiff * WIDTH);
-            pointsToTrack.add(new PairWithText(rightLoc, downLoc));
+            List<double[]> coordinates = readCSVCoordinates("BinLocations.csv");
+            System.out.println(coordinates.get(0)[0]);
+            for (int i = 0; i < coordinates.size(); i++) {
+                convertAndAdd(coordinates.get(i), proportion);
+            }
+//            int downLoc = (int) Math.round((currLat - topLat) / latDiff * WIDTH / proportion);
+//            int rightLoc = (int) Math.round((currLong - topLong) / longDiff * WIDTH);
+//            pointsToTrack.add(new PairWithText(rightLoc, downLoc));
 
             usercreated = new ArrayList<Pair>();
             defaultSettings();
@@ -92,6 +90,19 @@ public class CompostFinder extends JPanel implements MouseListener {
         // this one is approx over Frost
         pointsToTrack.add(new PairWithText(520, 335, "Frost: Front door, Periodicals Reading Room, 3rd floor, C-Level"));
 
+    }
+
+    private void convertAndAdd(double[] coordinates, double proportion) {
+        double topLat = 42.37747909759732; //42.37747909759732, -72.5289558884478
+        double topLong = -72.5289558884478;
+        double botLat = 42.36708626458876; //42.367386655249895, -72.50576946133151
+        double botLong = -72.50576946133151;
+        double latDiff = botLat - topLat; // 42.374660288597745, -72.50579222182994
+        double longDiff = botLong - topLong;
+
+        int downLoc = (int) Math.round((coordinates[0] - topLat) / latDiff * WIDTH / proportion);
+        int rightLoc = (int) Math.round((coordinates[1] - topLong) / longDiff * WIDTH);
+        pointsToTrack.add(new PairWithText(rightLoc, downLoc));
     }
 
     private void defaultSettings() {

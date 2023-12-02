@@ -54,6 +54,14 @@ public class CompostFinder extends JPanel implements MouseListener {
 
             int w = image.getWidth();
             int h = image.getHeight();
+            double topLat = 42.377579;
+            double topLong = -72.529270;
+            double botLat = 42.366916;
+            double botLong = -72.505895;
+            double latDiff = botLat - topLat;
+            double longDiff = botLong - topLong;
+
+
             double proportion = ((double) w) / (double) h;
             this.baseImage = toBufferedImage(image.getScaledInstance(WIDTH, (int) (WIDTH / proportion), java.awt.Image.SCALE_SMOOTH))
             ;

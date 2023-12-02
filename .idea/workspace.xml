@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c525edf9-aabb-43f9-aa21-d0a87e7020c4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="c525edf9-aabb-43f9-aa21-d0a87e7020c4" name="Changes" comment="CSV file reader with the help of ChatGPT :)">
       <change beforePath="$PROJECT_DIR$/CompostFinder.java" beforeDir="false" afterPath="$PROJECT_DIR$/CompostFinder.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -83,6 +82,35 @@
       <option name="presentableId" value="Default" />
       <updated>1701477713357</updated>
     </task>
+    <task id="LOCAL-00001" summary="CSV file reader with the help of ChatGPT :)">
+      <option name="closed" value="true" />
+      <created>1701478820080</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1701478820080</updated>
+    </task>
+    <task id="LOCAL-00002" summary="CSV file reader with the help of ChatGPT :)">
+      <option name="closed" value="true" />
+      <created>1701478862024</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1701478862024</updated>
+    </task>
+    <task id="LOCAL-00003" summary="CSV file reader with the help of ChatGPT :)">
+      <option name="closed" value="true" />
+      <created>1701478869092</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1701478869092</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="CSV file reader with the help of ChatGPT :)" />
+    <option name="LAST_COMMIT_MESSAGE" value="CSV file reader with the help of ChatGPT :)" />
   </component>
 </project>

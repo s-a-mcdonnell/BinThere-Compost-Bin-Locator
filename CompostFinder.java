@@ -3,6 +3,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class CompostFinder extends JPanel {
     public static final int WIDTH = 1024;
@@ -75,5 +81,33 @@ public class CompostFinder extends JPanel {
 
         // Return the buffered image
         return bimage;
+    }
+
+    public static List<double[]> readCSVCoordinates(String filePath) {
+        List<double[]> data = new ArrayList<>();
+        String line = "";
+        String delimiter = ","; // CSV delimiter, usually a comma
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                // Split each line into an array of strings
+                String[] stringValues = line.split(delimiter);
+
+                // Parse the string values into doubles
+                double[] doubleValues = new double[stringValues.length];
+                for (int i = 0; i < stringValues.length; i++) {
+                    doubleValues[i] = Double.parseDouble(stringValues[i].trim());
+                }
+
+                // Add the double array to the list
+                data.add(doubleValues);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing a double value: " + e.getMessage());
+        }
+
+        return data;
     }
 }

@@ -25,7 +25,8 @@ public class CompostFinder extends JPanel implements MouseListener {
     public static final int CENTERY = HEIGHT / 2;
 
     private BufferedImage baseImage;
-    private BufferedImage scaledImage;
+    private BufferedImage[] scaledImages;
+    private int scale = 1;
 
     private Pair mouse = null;
     private Pair mouseToDrag = null;
@@ -33,6 +34,20 @@ public class CompostFinder extends JPanel implements MouseListener {
 
     // 2 = zoom in, 1 = don't zoom (pan), 0.5 = zoom out, 0 = do nothing
     private double zoomMode = 0;
+
+    private void setScaledImages() {
+        // length depends on scales to be scored
+        // images are stored at the index of their scale (ex. scaledImages[1] is the standard size, scaledImages[4] is four times as large, etc)
+        scaledImages = new BufferedImage[5];
+
+        // Preload with zoom factors 1, 2, and 4
+        int s = 1;
+        for (int i = 0; s <= 4; s = (int) Math.pow(2, i)) {
+            scaledImages[s] = toBufferedImage(baseImage.getScaledInstance((baseImage.getWidth() * s), (baseImage.getHeight() * s), java.awt.Image.SCALE_SMOOTH));
+            i++;
+        }
+
+    }
 
     public CompostFinder() {
         // Setup
@@ -53,10 +68,12 @@ public class CompostFinder extends JPanel implements MouseListener {
             System.err.println("Error");
         }
 
+        setScaledImages();
+
     }
 
     private void defaultSettings() {
-        scaledImage = toBufferedImage(baseImage);
+        scale = 1;
         zoomMode = 0;
         mouse = null;
         topLeftCorner.x = 0;
@@ -100,21 +117,23 @@ public class CompostFinder extends JPanel implements MouseListener {
 
 
     // TODO: Refactor to take no parameters and just directly access zoomMode
-    public void zoom(double scale) {
+    public void zoom(double s) {
         // For testing:
-        System.out.println("zoom " + scale);
+        System.out.println("zoom " + s);
         System.out.println("mouse x: " + mouse.x + ", mouse y: " + mouse.y);
 
         if (zoomMode == 0) return;
 
-        // Don't zoom out past min size
+        if (this.scale * zoomMode <= 4) this.scale *= zoomMode;
+
+        /*// Don't zoom out past min size
         if (scale < 1 && (scaledImage.getWidth() <= baseImage.getWidth() || scaledImage.getHeight() <= baseImage.getHeight())) {
             zoomMode = 1;
             return;
         }
 
         scaledImage = toBufferedImage(scaledImage.getScaledInstance((int) (scaledImage.getWidth() * scale), (int) (scaledImage.getHeight() * scale), java.awt.Image.SCALE_SMOOTH))
-        ;
+        ;*/
 
         this.mouse = null;
     }
@@ -124,7 +143,7 @@ public class CompostFinder extends JPanel implements MouseListener {
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        g.drawImage(this.scaledImage, (int) topLeftCorner.x, (int) topLeftCorner.y, null);
+        g.drawImage(scaledImages[scale], (int) topLeftCorner.x, (int) topLeftCorner.y, null);
 
 
         // Printing for testing
@@ -142,11 +161,11 @@ public class CompostFinder extends JPanel implements MouseListener {
         } else if (button(g, 700, 100, HEIGHT - 60, 50, "Reset")) {
             defaultSettings();
         } else if (this.mouse != null && (mouse.x >= 0 && mouse.x <= WIDTH && mouse.y >= 0 && mouse.y <= HEIGHT)) {
-            if (zoomMode == 2) {
+            if (zoomMode == 2 && scale < 4) {
                 topLeftCorner.x -= mouse.x - topLeftCorner.x;
                 topLeftCorner.y -= mouse.y - topLeftCorner.y;
                 zoom();
-            } else if (zoomMode == 0.5) {
+            } else if (zoomMode == 0.5 && scale > 1) {
                 topLeftCorner.x += 0.5 * (mouse.x - topLeftCorner.x);
                 topLeftCorner.y += 0.5 * (mouse.y - topLeftCorner.y);
                 zoom();
@@ -164,7 +183,7 @@ public class CompostFinder extends JPanel implements MouseListener {
         }
 
         // Create a buffered image with transparency
-        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), java.awt.image.BufferedImage.TYPE_INT_ARGB);
 
         // Draw the image on to the buffered image
         Graphics2D bGr = bimage.createGraphics();

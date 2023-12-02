@@ -1,0 +1,113 @@
+Index: CompostFinder.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import javax.imageio.ImageIO;\nimport javax.swing.*;\nimport java.awt.*;\nimport java.awt.image.BufferedImage;\nimport java.io.File;\n\npublic class CompostFinder extends JPanel {\n    public static final int WIDTH = 1024;\n    public static final int HEIGHT = 768;\n    public static final int FPS = 60;\n    public static final double CENTERX = WIDTH / 2.0;\n    public static final double CENTERY = HEIGHT / 2.0;\n\n    BufferedImage image;\n\n    public CompostFinder() {\n        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));\n\n        try {\n            this.image = ImageIO.read(new File(\"ACHigherQ.png\"));\n\n            //TODO: add a silly little coment\n            int w = this.image.getWidth();\n            int h = this.image.getHeight();\n            double proportion = ((double) w) / (double) h;\n            this.image = toBufferedImage(image.getScaledInstance((int) (HEIGHT * proportion), HEIGHT, java.awt.Image.SCALE_SMOOTH));\n\n        } catch (Exception e) {\n            System.err.println(\"Error\");\n        }\n\n    }\n\n    public void Go() {\n        while (true) {\n            //TODO: Write update methods for whatever needs to be updated\n\n            repaint();\n            try {\n                Thread.sleep(1000 / FPS);\n            } catch (InterruptedException e) {\n            }\n        }\n    }\n\n    public static void main(String[] args) {\n        JFrame frame = new JFrame(\"Compost Finder\");\n        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\n        CompostFinder world = new CompostFinder();\n        frame.setContentPane(world);\n        frame.pack();\n        frame.setVisible(true);\n        world.Go();\n    }\n\n    public void paintComponent(Graphics g) {\n        //TODO: Scale\n        g.drawImage(this.image, 0, 0, null);\n    }\n\n    // From https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage\n    public static BufferedImage toBufferedImage(Image img) {\n        if (img instanceof BufferedImage) {\n            return (BufferedImage) img;\n        }\n\n        // Create a buffered image with transparency\n        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);\n\n        // Draw the image on to the buffered image\n        Graphics2D bGr = bimage.createGraphics();\n        bGr.drawImage(img, 0, 0, null);\n        bGr.dispose();\n\n        // Return the buffered image\n        return bimage;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/CompostFinder.java b/CompostFinder.java
+--- a/CompostFinder.java	(revision ee6086263177fe62e504d9f9188745751ede1557)
++++ b/CompostFinder.java	(date 1701479077184)
+@@ -3,6 +3,12 @@
+ import java.awt.*;
+ import java.awt.image.BufferedImage;
+ import java.io.File;
++import java.io.BufferedReader;
++import java.io.FileReader;
++import java.io.IOException;
++import java.util.ArrayList;
++import java.util.List;
++
+ 
+ public class CompostFinder extends JPanel {
+     public static final int WIDTH = 1024;
+@@ -75,4 +81,32 @@
+         // Return the buffered image
+         return bimage;
+     }
++
++    public static List<double[]> readCSVCoordinates(String filePath) {
++        List<double[]> data = new ArrayList<>();
++        String line = "";
++        String delimiter = ","; // CSV delimiter, usually a comma
++
++        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
++            while ((line = br.readLine()) != null) {
++                // Split each line into an array of strings
++                String[] stringValues = line.split(delimiter);
++
++                // Parse the string values into doubles
++                double[] doubleValues = new double[stringValues.length];
++                for (int i = 0; i < stringValues.length; i++) {
++                    doubleValues[i] = Double.parseDouble(stringValues[i].trim());
++                }
++
++                // Add the double array to the list
++                data.add(doubleValues);
++            }
++        } catch (IOException e) {
++            e.printStackTrace();
++        } catch (NumberFormatException e) {
++            System.out.println("Error parsing a double value: " + e.getMessage());
++        }
++
++        return data;
++    }
+ }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"c525edf9-aabb-43f9-aa21-d0a87e7020c4\" name=\"Changes\" comment=\"\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/CompostFinder.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/CompostFinder.java\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"CompilerWorkspaceConfiguration\">\n    <option name=\"CLEAR_OUTPUT_DIRECTORY\" value=\"false\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Class\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"FindBugs-IDEA-Workspace\">\n    <analyzeAfterCompile>true</analyzeAfterCompile>\n    <toolWindowToFront>false</toolWindowToFront>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"MarkdownSettingsMigration\">\n    <option name=\"stateVersion\" value=\"1\" />\n  </component>\n  <component name=\"ProjectId\" id=\"2Yxo9ca22cPZNjMro9xrK2ag5MY\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"abbreviatePackageNames\" value=\"true\" />\n    <option name=\"autoscrollFromSource\" value=\"true\" />\n    <option name=\"autoscrollToSource\" value=\"true\" />\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showExcludedFiles\" value=\"false\" />\n    <option name=\"showModules\" value=\"false\" />\n    <option name=\"sortByType\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;\n  }\n}</component>\n  <component name=\"RunManager\">\n    <configuration default=\"true\" type=\"Application\" factoryName=\"Application\">\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration default=\"true\" type=\"JUnit\" factoryName=\"JUnit\">\n      <option name=\"TEST_OBJECT\" value=\"class\" />\n      <option name=\"WORKING_DIRECTORY\" value=\"%MODULE_WORKING_DIR%\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration default=\"true\" type=\"TestNG\">\n      <option name=\"TEST_OBJECT\" value=\"CLASS\" />\n      <option name=\"WORKING_DIRECTORY\" value=\"%MODULE_WORKING_DIR%\" />\n      <properties />\n      <listeners />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"c525edf9-aabb-43f9-aa21-d0a87e7020c4\" name=\"Changes\" comment=\"\" />\n      <created>1701477713357</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1701477713357</updated>\n    </task>\n    <servers />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision ee6086263177fe62e504d9f9188745751ede1557)
++++ b/.idea/workspace.xml	(date 1701479026591)
+@@ -4,8 +4,7 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="c525edf9-aabb-43f9-aa21-d0a87e7020c4" name="Changes" comment="">
+-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++    <list default="true" id="c525edf9-aabb-43f9-aa21-d0a87e7020c4" name="Changes" comment="CSV file reader with the help of ChatGPT :)">
+       <change beforePath="$PROJECT_DIR$/CompostFinder.java" beforeDir="false" afterPath="$PROJECT_DIR$/CompostFinder.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -83,6 +82,35 @@
+       <option name="presentableId" value="Default" />
+       <updated>1701477713357</updated>
+     </task>
++    <task id="LOCAL-00001" summary="CSV file reader with the help of ChatGPT :)">
++      <option name="closed" value="true" />
++      <created>1701478820080</created>
++      <option name="number" value="00001" />
++      <option name="presentableId" value="LOCAL-00001" />
++      <option name="project" value="LOCAL" />
++      <updated>1701478820080</updated>
++    </task>
++    <task id="LOCAL-00002" summary="CSV file reader with the help of ChatGPT :)">
++      <option name="closed" value="true" />
++      <created>1701478862024</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1701478862024</updated>
++    </task>
++    <task id="LOCAL-00003" summary="CSV file reader with the help of ChatGPT :)">
++      <option name="closed" value="true" />
++      <created>1701478869092</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1701478869092</updated>
++    </task>
++    <option name="localTasksCounter" value="4" />
+     <servers />
+   </component>
++  <component name="VcsManagerConfiguration">
++    <MESSAGE value="CSV file reader with the help of ChatGPT :)" />
++    <option name="LAST_COMMIT_MESSAGE" value="CSV file reader with the help of ChatGPT :)" />
++  </component>
+ </project>
+\ No newline at end of file

@@ -32,6 +32,9 @@ public class CompostFinder extends JPanel implements MouseListener {
     private Pair mouseToDrag = null;
     private Pair topLeftCorner = new Pair(0, 0);
 
+    // TODO: set this to useful values
+    private ArrayList<Pair> pointsToTrack = new ArrayList<Pair>();
+
     // 2 = zoom in, 1 = don't zoom (pan), 0.5 = zoom out, 0 = do nothing
     private double zoomMode = 0;
 
@@ -55,6 +58,10 @@ public class CompostFinder extends JPanel implements MouseListener {
         }
 
         setScaledImages();
+
+        // TODO: Change from test values to useful values (compost bin locations)
+        pointsToTrack.add(new Pair(100, 100));
+        pointsToTrack.add(new Pair(200, 500));
 
     }
 
@@ -129,11 +136,17 @@ public class CompostFinder extends JPanel implements MouseListener {
 
     // Updates and paints
     public void paintComponent(Graphics g) {
+        // Background
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         g.drawImage(scaledImages[scale], (int) topLeftCorner.x, (int) topLeftCorner.y, null);
 
+        g.setColor(Color.RED);
+        // TODO: Make points look as desired (currently 50 by 50 red squares)
+        for (Pair p : pointsToTrack) {
+            g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 50 * scale, 50 * scale);
+        }
         // Printing for testing
         if (button(g, 100, 100, HEIGHT - 60, 50, "Zoom In")) {
             System.out.println("zoom in");

@@ -88,9 +88,9 @@ public class CompostFinder extends JPanel implements MouseListener {
 
         // TODO: Change from test values to useful values (compost bin locations)
         // this one is approx over Val
-        pointsToTrack.add(new PairWithText(580, 280, "Val"));
+        pointsToTrack.add(new PairWithText(580, 280, "Val: By the checker stand and the further stairs"));
         // this one is approx over Frost
-        pointsToTrack.add(new PairWithText(520, 335, "Frost"));
+        pointsToTrack.add(new PairWithText(520, 335, "Frost: Front door, Periodicals Reading Room, 3rd floor, C-Level"));
 
     }
 
@@ -271,7 +271,7 @@ public class CompostFinder extends JPanel implements MouseListener {
 
     private boolean checkCanClicker(Graphics g) {
         for (PairWithText p : pointsToTrack) {
-            if (this.mouse != null && (this.mouse.x >= topLeftCorner.x + scale * p.x && this.mouse.x <= topLeftCorner.x + scale * p.x + binIcon.getWidth() && this.mouse.y >= topLeftCorner.y + scale * p.y && this.mouse.y <= topLeftCorner.y + scale * p.y + binIcon.getHeight())) {
+            if (this.mouse != null && inside(this.mouse, topLeftCorner.x + scale * p.x, binIcon.getWidth(), topLeftCorner.y + scale * p.y, binIcon.getHeight())) {
                 this.mouse = null;
                 p.showDescription = !p.showDescription;
             }
@@ -349,7 +349,7 @@ public class CompostFinder extends JPanel implements MouseListener {
         g.setColor(color2);
         g.drawString(words, (int) (x + 0.2 * dx), (int) (y + 0.5 * dy));
 
-        if (this.mouse != null && (mouse.x >= x && mouse.x <= x + dx && mouse.y >= y && mouse.y <= y + dy)) {
+        if (this.mouse != null && inside(mouse, x, dx, y, dy)) {
             // Reset mouse
             this.mouse = null;
             // For testing:
@@ -358,11 +358,22 @@ public class CompostFinder extends JPanel implements MouseListener {
         } else {
             return false;
         }
+    }
 
+    // Returns true if given Pair is inside given bounds
+    // Otherwise returns false
+    private boolean inside(Pair p, double x, double dx, double y, double dy) {
+        // Validity check
+        if (dx < 0 || dy < 0) {
+            System.err.println("Error: invalid box");
+            return false;
+        }
 
+        return p.x >= x && p.x <= x + dx && p.y >= y && p.y <= y + dy;
     }
 
     @Override
+
     public void mouseExited(MouseEvent click) {
     }
 

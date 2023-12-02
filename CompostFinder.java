@@ -1,10 +1,12 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-public class CompostFinder extends JPanel {
+public class CompostFinder extends JPanel implements MouseListener {
     public static final int WIDTH = 1024;
     public static final int HEIGHT = 768;
     public static final int FPS = 60;
@@ -15,7 +17,11 @@ public class CompostFinder extends JPanel {
 
     private BufferedImage scaledImage;
 
+    private Pair mouse = null;
+
     public CompostFinder() {
+        // Setup
+        addMouseListener(this);
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         try {
@@ -23,7 +29,6 @@ public class CompostFinder extends JPanel {
         } catch (Exception e) {
         }
 
-        //TODO: add a silly little comment
         int w = this.image.getWidth();
         int h = this.image.getHeight();
         double proportion = ((double) w) / (double) h;
@@ -40,6 +45,9 @@ public class CompostFinder extends JPanel {
                 Thread.sleep(1000 / FPS);
             } catch (InterruptedException e) {
             }
+
+            /*// Reset mouse
+            this.mouse = null;*/
         }
     }
 
@@ -54,8 +62,13 @@ public class CompostFinder extends JPanel {
     }
 
     public void paintComponent(Graphics g) {
-        //TODO: Scale
         g.drawImage(this.scaledImage, 0, 0, null);
+
+        // TODO: Make clicking the mouse do something useful (currently, it just draws a square at the location of the click
+        if (this.mouse != null) {
+            g.setColor(Color.RED);
+            g.fillRect((int) mouse.x - 5, (int) mouse.y - 5, 10, 10);
+        }
     }
 
     // From https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage
@@ -74,5 +87,30 @@ public class CompostFinder extends JPanel {
 
         // Return the buffered image
         return bimage;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent click) {
+        Point location = click.getPoint();
+
+        // Save the location at which the mouse clicks (if the click was on the display area)
+        if (location.x >= 0 && location.x <= WIDTH && location.y >= 0 && location.y <= HEIGHT)
+            this.mouse = new Pair(location.x, location.y);
+    }
+
+    @Override
+    public void mouseExited(MouseEvent click) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent click) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent click) {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent click) {
     }
 }

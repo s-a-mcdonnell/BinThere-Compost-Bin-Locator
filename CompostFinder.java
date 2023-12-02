@@ -24,7 +24,6 @@ public class CompostFinder extends JPanel implements MouseListener {
     private BufferedImage scaledImage;
 
     private Pair mouse = null;
-    // __ private Pair anchor = null;
     private Pair topLeftCorner = new Pair(0, 0);
 
     // 2 = zoom in, 1 = don't zoom (pan), 0.5 = zoom out, 0 = do nothing
@@ -55,7 +54,6 @@ public class CompostFinder extends JPanel implements MouseListener {
         scaledImage = toBufferedImage(baseImage);
         zoomMode = 0;
         mouse = null;
-        // __anchor = null;
         topLeftCorner.x = 0;
         topLeftCorner.y = 0;
     }
@@ -85,19 +83,6 @@ public class CompostFinder extends JPanel implements MouseListener {
     }
 
     public void update() {
-        // TODO: Write update method
-
-
-        /*if (zoomMode == 2 && anchor != null) {
-            topLeftCorner.x -= anchor.x - topLeftCorner.x;
-            topLeftCorner.y -= anchor.y - topLeftCorner.y;
-        } else if (zoomMode == 0.5 && anchor != null) {
-            topLeftCorner.x += 0.5 * (anchor.x - topLeftCorner.x);
-            topLeftCorner.y += 0.5 * (anchor.y - topLeftCorner.y);
-        } else {
-            //__
-        }*/
-
         zoom();
     }
 
@@ -132,8 +117,6 @@ public class CompostFinder extends JPanel implements MouseListener {
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        //__g.drawImage(this.scaledImage, (int) anchor.x - this.scaledImage.getWidth() / 2, (int) anchor.y - this.scaledImage.getHeight() / 2, null);
-        // __g.drawImage(this.scaledImage, CENTERX - (int) (zoomMode * anchor.x), CENTERY - (int) (zoomMode * anchor.y), null);
         g.drawImage(this.scaledImage, (int) topLeftCorner.x, (int) topLeftCorner.y, null);
 
         // TODO: Make clicking the mouse do something useful (currently, it just draws a square at the location of the click
@@ -145,16 +128,13 @@ public class CompostFinder extends JPanel implements MouseListener {
         // __ testing
         if (button(g, 100, 100, HEIGHT - 60, 50, "Zoom In")) {
             System.out.println("zoom in");
-            //__anchor = mouse;
             mouse = null;
             zoomMode = 2;
         } else if (button(g, 300, 100, HEIGHT - 60, 50, "Zoom Out")) {
             System.out.println("zoom out");
-            //__anchor = mouse;
             mouse = null;
             zoomMode = 0.5;
         } else if (button(g, 500, 100, HEIGHT - 60, 50, "Pan")) {
-            //__anchor = mouse;
             mouse = null;
             zoomMode = 1;
         } else if (button(g, 700, 100, HEIGHT - 60, 50, "Reset")) {

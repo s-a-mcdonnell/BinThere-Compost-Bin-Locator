@@ -64,17 +64,10 @@ public class CompostFinder extends JPanel implements MouseListener {
             double proportion = ((double) w) / (double) h;
             this.baseImage = toBufferedImage(image.getScaledInstance(WIDTH, (int) (WIDTH / proportion), java.awt.Image.SCALE_SMOOTH));
 
-//            double currLat = 42.37020925345563; // 42.37020925345563, -72.51800758810398
-//            double currLong = -72.51800758810398;
-
             List<double[]> coordinates = readCSVCoordinates("BinLocations.csv");
-            System.out.println(coordinates.get(0)[0]);
             for (int i = 0; i < coordinates.size(); i++) {
                 convertAndAdd(coordinates.get(i), proportion);
             }
-//            int downLoc = (int) Math.round((currLat - topLat) / latDiff * WIDTH / proportion);
-//            int rightLoc = (int) Math.round((currLong - topLong) / longDiff * WIDTH);
-//            pointsToTrack.add(new PairWithText(rightLoc, downLoc));
 
             usercreated = new ArrayList<Pair>();
             defaultSettings();

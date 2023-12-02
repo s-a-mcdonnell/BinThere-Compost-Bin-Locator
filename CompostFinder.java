@@ -147,7 +147,12 @@ public class CompostFinder extends JPanel implements MouseListener {
         g.setColor(Color.RED);
         // TODO: Make points look as desired (currently 15 by 15 red squares)
         for (Pair p : pointsToTrack) {
-            g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15 * scale, 15 * scale);
+            // This scales the box alone with the drawing
+            // g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15 * scale, 15 * scale);
+
+            // This just transposes
+            g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
+
         }
         // Printing for testing
         if (button(g, 100, 100, HEIGHT - 60, 50, "Zoom In")) {

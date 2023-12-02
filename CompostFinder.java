@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 
 public class CompostFinder extends JPanel {
@@ -57,6 +58,7 @@ public class CompostFinder extends JPanel {
         frame.pack();
         frame.setVisible(true);
         world.Go();
+        Scanner scan = new Scanner(System.in);
 
     }
 

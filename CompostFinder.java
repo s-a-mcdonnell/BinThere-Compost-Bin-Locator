@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
+import java.util.Scanner;
 
 
 public class CompostFinder extends JPanel implements MouseListener {
@@ -22,6 +22,9 @@ public class CompostFinder extends JPanel implements MouseListener {
 
     private BufferedImage image;
     private BufferedImage scaledImage;
+
+    private boolean amZoomingIn;
+    private boolean amZoomingOut;
 
     private Pair mouse = null;
 
@@ -48,7 +51,7 @@ public class CompostFinder extends JPanel implements MouseListener {
     public void Go() {
         while (true) {
             //TODO: Write update methods for whatever needs to be updated
-
+            update();
             repaint();
             try {
                 Thread.sleep(1000 / FPS);
@@ -67,6 +70,21 @@ public class CompostFinder extends JPanel implements MouseListener {
         world.Go();
         Scanner scan = new Scanner(System.in);
 
+    }
+
+    //__
+    public void update() {
+        if (this.mouse != null) {
+            zoom(mouse, 1.5);
+        }
+
+        this.mouse = null;
+    }
+
+    public void zoom(Pair p, double scale) {
+        //__
+        scaledImage = toBufferedImage(scaledImage.getScaledInstance((int) (scaledImage.getWidth() * scale), (int) (scaledImage.getHeight() * scale), java.awt.Image.SCALE_SMOOTH))
+        ;
     }
 
     public void paintComponent(Graphics g) {

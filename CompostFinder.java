@@ -19,6 +19,7 @@ public class CompostFinder extends JPanel {
         try {
             this.image = ImageIO.read(new File("ACHigherQ.png"));
 
+            //TODO: add a silly little coment
             int w = this.image.getWidth();
             int h = this.image.getHeight();
             double proportion = ((double) w) / (double) h;

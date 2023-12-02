@@ -74,7 +74,7 @@ public class CompostFinder extends JPanel implements MouseListener {
             int rightLoc = (int) Math.round((currLong - topLong) / longDiff * WIDTH);
             pointsToTrack.add(new PairWithText(rightLoc, downLoc));
 
-
+            usercreated = new ArrayList<Pair>();
             defaultSettings();
         } catch (Exception e) {
             System.err.println("Error");
@@ -97,7 +97,6 @@ public class CompostFinder extends JPanel implements MouseListener {
         topLeftCorner.x = 0;
         topLeftCorner.y = 0;
         dropPoint = false;
-        usercreated = new ArrayList<Pair>();
     }
 
     private void setScaledImages() {
@@ -218,28 +217,31 @@ public class CompostFinder extends JPanel implements MouseListener {
     // Returns true if any of the buttons were pressed
     // else returns false
     public boolean allButtons(Graphics g) {
-        if (button(g, 100, 100, HEIGHT - 60, 50, "Zoom In")) {
+        if (button(g, 30, 100, HEIGHT - 60, 50, "Zoom In")) {
             System.out.println("zoom in");
             mouse = null;
             zoomMode = 2;
             dropPoint = false;
             return true;
-        } else if (button(g, 300, 100, HEIGHT - 60, 50, "Zoom Out")) {
+        } else if (button(g, 150, 100, HEIGHT - 60, 50, "Zoom Out")) {
             System.out.println("zoom out");
             mouse = null;
             zoomMode = 0.5;
             dropPoint = false;
             return true;
-        } else if (button(g, 500, 100, HEIGHT - 60, 50, "Pan")) {
+        } else if (button(g, 270, 100, HEIGHT - 60, 50, "Pan")) {
             mouse = null;
             zoomMode = 1;
             dropPoint = false;
             return true;
-        } else if (button(g, 700, 100, HEIGHT - 60, 50, "Reset")) {
+        } else if (button(g, 390, 100, HEIGHT - 60, 50, "Reset")) {
             defaultSettings();
+            usercreated = new ArrayList<Pair>();
             return true;
-        } else if (button(g, 900, 100, HEIGHT - 60, 50, "Drop Point")) {
-            //__
+        } else if (button(g, 510, 100, HEIGHT - 60, 50, "Recenter")) {
+            // Resets but without erasing user-created points
+            defaultSettings();
+        } else if (button(g, 630, 100, HEIGHT - 60, 50, "Drop Point")) {
             mouse = null;
             zoomMode = 0;
             dropPoint = true;

@@ -28,6 +28,8 @@ public class CompostFinder extends JPanel implements MouseListener {
     private BufferedImage[] scaledImages;
     private int scale = 1;
 
+    private BufferedImage binIcon;
+
     private Pair mouse = null;
     private Pair mouseToDrag = null;
     private Pair topLeftCorner = new Pair(0, 0);
@@ -44,6 +46,10 @@ public class CompostFinder extends JPanel implements MouseListener {
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         try {
+            BufferedImage binImage = ImageIO.read(new File("CompostBinPlaceholder.png"));
+            this.binIcon = toBufferedImage(binImage.getScaledInstance(20, (int) (20.0 / (binImage.getWidth() / binImage.getHeight())), java.awt.Image.SCALE_SMOOTH));
+
+
             BufferedImage image = ImageIO.read(new File("ACHigherQ.png"));
 
             int w = image.getWidth();
@@ -151,7 +157,9 @@ public class CompostFinder extends JPanel implements MouseListener {
             // g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15 * scale, 15 * scale);
 
             // This just transposes
-            g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
+            // g.fillRect((int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), 15, 15);
+
+            g.drawImage(binIcon, (int) (topLeftCorner.x + scale * p.x), (int) (topLeftCorner.y + scale * p.y), null);
 
         }
         // Printing for testing
